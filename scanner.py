@@ -9,6 +9,7 @@ import sys
 import time
 
 # Internal modular imports
+from network_scanner import __version__
 from network_scanner.constants import COMMON_TOP_PORTS, COMMON_UDP_PORTS
 from network_scanner.core.config import load_config, save_config
 from network_scanner.fingerprint.device_type import classify_device
@@ -667,8 +668,9 @@ def handle_geo(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Network Scanner Suite (v2.0) - Layer 2/3/4 Reconnaissance, OS Detection, and Security Auditing Toolkit."
+        description=f"Network Scanner Suite (v{__version__}) - Layer 2/3/4 Reconnaissance, OS Detection, and Security Auditing Toolkit."
     )
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{__version__}")
     subparsers = parser.add_subparsers(dest="command", help="Command to perform.", required=True)
 
     # -----------------------------

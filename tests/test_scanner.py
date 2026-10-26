@@ -18,7 +18,16 @@ from network_scanner.scanners.smb import build_smb1_negotiate_packet, build_smb2
 from network_scanner.scanners.snmp import build_snmp_get_packet, encode_oid
 from network_scanner.security.cve import audit_host_vulnerabilities, lookup_cves
 from network_scanner.security.risk import calculate_host_risk, calculate_network_risk
+from network_scanner import __version__
 from network_scanner.utils.network import int2ip, resolve_mac_vendor
+
+
+class TestVersion(unittest.TestCase):
+    def test_version_format(self):
+        parts = __version__.split(".")
+        self.assertEqual(len(parts), 3)
+        self.assertTrue(all(p.isdigit() for p in parts))
+        self.assertEqual(__version__, "2.3.0")
 
 
 class TestNetworkUtilities(unittest.TestCase):

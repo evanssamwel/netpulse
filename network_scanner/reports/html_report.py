@@ -9,6 +9,8 @@ and dynamic Theme Switcher (Dark Obsidian, Executive Light, Cyberpunk Matrix).
 import html
 from datetime import datetime
 
+from network_scanner import __version__
+
 
 THEME_CONFIGS = {
     "dark": {
@@ -505,7 +507,7 @@ def generate_html_report(title, scan_type, target, stats, items, output_path="re
             <div class="header-right">
                 <div class="header-meta">
                     <div>Generated: <strong>{timestamp}</strong></div>
-                    <div>Engine: <strong>Network Scanner Suite v2.0</strong></div>
+                    <div>Engine: <strong>Network Scanner Suite v{__version__}</strong></div>
                 </div>
                 <select id="themeSelector" class="theme-select" onchange="changeTheme(this.value)">
                     <option value="dark" {'selected' if active_theme == 'dark' else ''}>🌙 Dark Obsidian</option>

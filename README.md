@@ -6,7 +6,7 @@
 [![Scapy](https://img.shields.io/badge/Scapy-2.8.0-red.svg)](https://scapy.net/)
 [![Code Style](https://img.shields.io/badge/Architecture-Modular%20v2.0-green.svg)](#architecture)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](#docker-deployment)
-[![Tests](https://img.shields.io/badge/Tests-31%20Passing-brightgreen.svg)](#automated-testing)
+[![Tests](https://img.shields.io/badge/Tests-32%20Passing-brightgreen.svg)](#automated-testing)
 
 A high-performance Python network discovery, security auditing, and asset inventory toolkit designed for system administrators, penetration testers, and home lab enthusiasts.
 
