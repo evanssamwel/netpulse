@@ -1,0 +1,10 @@
+services:
+  scanner:
+    build: .
+    network_mode: "host"
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    volumes:
+      - ./reports:/app/reports
+    command: ["ARP", "--local", "--html", "reports/network_audit.html"]
