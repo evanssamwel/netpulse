@@ -6,4 +6,6 @@ __pycache__/
 *.html
 *.json
 *.csv
+*.pcap
+*.svg
 !requirements.txt
