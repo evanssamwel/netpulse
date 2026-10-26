@@ -94,8 +94,8 @@ scanner.py (CLI Entrypoint)
 
 ```bash
 # Clone the repository
-git clone https://github.com/evanssamwel/network-scanner.git
-cd network-scanner
+git clone https://github.com/evanssamwel/netpulse.git
+cd netpulse
 
 # Create and activate a virtual environment
 python3 -m venv .venv
@@ -107,10 +107,33 @@ pip install -r requirements.txt
 
 ---
 
-## Command-Line Usage
+## ⚡ Quick Start
+
+### Option A: Launch the Graphical Web App (No CLI typing!)
+```bash
+# Start NetPulse Studio on port 8080
+python scanner.py SERVE --port 8080
+```
+Open **[http://127.0.0.1:8080/](http://127.0.0.1:8080/)** in your browser to run ping sweeps, port audits, Wi-Fi discovery, GeoIP intel, DNS enumeration, and device tagging with 1-click graphical controls.
+
+### Option B: Run via Command-Line
+```bash
+# Fast unprivileged local host ping sweep
+python scanner.py PING --local
+
+# Fast Layer 2 ARP discovery with OUI hardware classification (requires root)
+sudo .venv/bin/python scanner.py ARP --local --html network_audit.html
+
+# Comprehensive TCP port & offline CVE security audit
+python scanner.py TCP 192.168.1.1 --top-ports 20
+```
+
+---
+
+## Command-Line Reference
 
 ```bash
-usage: scanner.py [-h] {ARP,TCP,UDP,SNMP,SMB,PING,TAG} ...
+usage: scanner.py [-h] [-v] {ARP,TCP,UDP,SNMP,SMB,DNS,SNIFF,WIFI,GEO,SERVE,CONFIG,PING,TAG} ...
 ```
 
 ### 1. ARP Discovery (`ARP`)
