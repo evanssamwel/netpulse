@@ -27,7 +27,7 @@ class TestVersion(unittest.TestCase):
         parts = __version__.split(".")
         self.assertEqual(len(parts), 3)
         self.assertTrue(all(p.isdigit() for p in parts))
-        self.assertEqual(__version__, "2.3.0")
+        self.assertEqual(__version__, "2.3.1")
 
 
 class TestNetworkUtilities(unittest.TestCase):
