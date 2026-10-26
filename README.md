@@ -1,4 +1,4 @@
-# Network Scanner Suite (v2.3)
+# Network Scanner Suite (v2.4.0)
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -6,7 +6,8 @@
 [![Scapy](https://img.shields.io/badge/Scapy-2.8.0-red.svg)](https://scapy.net/)
 [![Code Style](https://img.shields.io/badge/Architecture-Modular%20v2.0-green.svg)](#architecture)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](#docker-deployment)
-[![Tests](https://img.shields.io/badge/Tests-32%20Passing-brightgreen.svg)](#automated-testing)
+[![Tests](https://img.shields.io/badge/Tests-34%20Passing-brightgreen.svg)](#automated-testing)
+[![Web App](https://img.shields.io/badge/GUI-CyberScan%20Studio-0ea5e9.svg)](#10-cyberscan-studio-web-app-gui--rest-api-serve)
 
 A high-performance Python network discovery, security auditing, and asset inventory toolkit designed for system administrators, penetration testers, and home lab enthusiasts.
 
@@ -252,22 +253,43 @@ sudo .venv/bin/python scanner.py SNIFF -i eth0 -c 50 -f "port 53 or arp" -w capt
 
 ---
 
-### 10. Web Dashboard & REST API Daemon (`SERVE`)
+### 10. CyberScan Studio Web App GUI & REST API (`SERVE`)
 
-*Starts an embedded, zero-dependency Python web server hosting an interactive dashboard and real-time REST API.*
+*Instead of typing terminal commands, run scans through a sleek, point-and-click graphical Web App in your browser.*
 
 ```bash
-# Start the web dashboard and REST API on port 8080
+# Start the CyberScan Studio Web GUI on port 8080
 python scanner.py SERVE --host 127.0.0.1 --port 8080
 ```
 
-Available REST API endpoints:
-- `GET /` — Interactive Web Dashboard
-- `GET /api/inventory` — Current device history inventory
+Once running, navigate to **`http://127.0.0.1:8080/`** to access the complete graphical cybersecurity console:
+
+- 📊 **Assets & Inventory**: Live device tracking table, quick search & filtering, CSV/JSON export, and friendly device tagging dialog.
+- ⚡ **Subnet Ping Sweep**: One-click host discovery with auto-detected CIDR, concurrency slider, latency metrics, and instant port scan buttons.
+- 🔍 **Port & Vulnerability Auditor**: Target IP presets, TCP connect & raw SYN scans, UDP service probes, host risk gauge (0–100), and offline CVE vulnerability lookup.
+- 📶 **Wi-Fi Reconnaissance**: Airspace scanner displaying nearby access points, signal strength bars, channels, and insecure open network alerts.
+- 🌍 **WAN GeoIP Threat Intel**: External IP lookup showing country, city, ISP, ASN routing, and direct Google Maps coordinate links.
+- 🌐 **DNS & AXFR Auditor**: Query A, AAAA, MX, NS, TXT, SOA records and audit authoritative nameservers for dangerous AXFR zone transfer leaks.
+- 🛡️ **Automated Remediation**: Generate and copy immediate Linux kernel firewall isolation scripts (`iptables` / `nftables`) for rogue or compromised hosts.
+- 🌙 **Multi-Theme Switcher**: Instant switching between **Dark Obsidian**, **Cyberpunk Neon**, and **Executive Light** themes.
+
+Full REST API endpoints:
+- `GET /` — CyberScan Studio Interactive Web Application (GUI)
+- `GET /api/inventory` — Discovered host assets and lifecycle history
 - `GET /api/tags` — Configured device friendly tags and notes
-- `GET /api/subnet` — Auto-detected local subnet and interface
-- `GET /api/scan/wifi` — Trigger real-time wireless AP discovery
-- `GET /api/scan/tcp?target=IP&ports=22,80,443` — Run on-demand port scan
+- `GET /api/subnet` — Auto-detected local CIDR subnet and gateway
+- `GET /api/wifi/interfaces` — Available wireless network interfaces
+- `GET /api/scan/wifi?interface=...` — Scan nearby 802.11 Wi-Fi networks
+- `GET /api/scan/geo?ip=...` — Retrieve WAN IP geolocation & ASN intelligence
+- `GET /api/scan/dns?target=...` — Query DNS records and test AXFR zone transfer
+- `GET /api/export?format=csv|json` — Download inventory data
+- `POST /api/scan/ping` — Execute ping sweep or single probe
+- `POST /api/scan/tcp` — Audit open TCP ports, banners, and offline CVEs
+- `POST /api/scan/udp` — Probe responsive UDP service ports
+- `POST /api/tag` — Save friendly device tag and notes
+- `POST /api/tag/delete` — Remove friendly tag
+- `POST /api/remediation/isolate` — Generate or execute host firewall isolation
+
 
 ---
 

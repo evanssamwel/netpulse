@@ -27,7 +27,7 @@ class TestVersion(unittest.TestCase):
         parts = __version__.split(".")
         self.assertEqual(len(parts), 3)
         self.assertTrue(all(p.isdigit() for p in parts))
-        self.assertEqual(__version__, "2.3.1")
+        self.assertEqual(__version__, "2.4.0")
 
 
 class TestNetworkUtilities(unittest.TestCase):
@@ -307,6 +307,33 @@ class TestRemediation(unittest.TestCase):
         finally:
             if os.path.exists(path):
                 os.remove(path)
+
+
+class TestWebServerAPI(unittest.TestCase):
+    def test_dashboard_html_structure(self):
+        from network_scanner.server.api import WEB_DASHBOARD_HTML
+        self.assertIn("CyberScan Studio", WEB_DASHBOARD_HTML)
+        self.assertIn("theme-obsidian", WEB_DASHBOARD_HTML)
+        self.assertIn("theme-cyberpunk", WEB_DASHBOARD_HTML)
+        self.assertIn("theme-light", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-inventory", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-ping", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-ports", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-wifi", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-geo", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-dns", WEB_DASHBOARD_HTML)
+        self.assertIn("tab-remediation", WEB_DASHBOARD_HTML)
+
+    def test_api_handler_endpoints(self):
+        import io
+        from network_scanner.server.api import ScannerAPIRequestHandler
+
+        class DummyServer:
+            pass
+
+        # Verify ScannerAPIRequestHandler exists and can be imported
+        self.assertTrue(hasattr(ScannerAPIRequestHandler, "do_GET"))
+        self.assertTrue(hasattr(ScannerAPIRequestHandler, "do_POST"))
 
 
 if __name__ == "__main__":
