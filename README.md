@@ -1,20 +1,87 @@
-# Network Scanner Suite
+# Network Scanner Suite (v2.3)
 
-A high-performance Python network discovery, security auditing, and inventory tracking tool built on Scapy and standard socket libraries.
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-lightgrey.svg?logo=linux&logoColor=white)](https://www.linux.org/)
+[![Scapy](https://img.shields.io/badge/Scapy-2.8.0-red.svg)](https://scapy.net/)
+[![Code Style](https://img.shields.io/badge/Architecture-Modular%20v2.0-green.svg)](#architecture)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](#docker-deployment)
+[![Tests](https://img.shields.io/badge/Tests-31%20Passing-brightgreen.svg)](#automated-testing)
+
+A high-performance Python network discovery, security auditing, and asset inventory toolkit designed for system administrators, penetration testers, and home lab enthusiasts.
+
+The project combines Layer 2/3/4 discovery, service and version enumeration, smart device classification, security posture risk scoring (0–100), offline CVE vulnerability auditing, SNMP/SMB reconnaissance, network diff change detection, and standalone interactive executive reporting into a single modular toolkit.
+
+---
+
+## Why Network Scanner Suite?
+
+Most command-line scanners either produce raw terminal text that is difficult to parse or require complex external scanning engines and database servers. **Network Scanner Suite** fills the gap:
+
+1. **Zero Configuration (`--local`)**: Automatically detects default interface, gateway, and CIDR subnet.
+2. **Actionable Risk Scoring (0–100)**: Translates exposed ports into a quantifiable security score with prioritized remediation advice.
+3. **Smart Hardware Profiling**: Classifies hosts (e.g. *Router/Gateway*, *Storage NAS*, *Printer*, *Smart IoT*, *Workstation*, *Server*) using combined MAC vendor, hostname, open ports, and TTL signals.
+4. **Offline CVE Vulnerability Detection**: Audits software banners against high-impact CVEs (e.g., Apache path traversal, OpenSSH regreSSHion, vsftpd backdoor, EternalBlue) with zero internet dependency.
+5. **SNMP & SMB Deep Enumeration**: Extracts MIB-II system metrics (uptime, description, model) and audits SMB dialects and message signing enforcement without brute force.
+6. **Historical Change Detection**: Alerts when devices appear, disappear, change hostnames, or switch MAC addresses (potential rogue device / ARP spoof warning).
+7. **Visual Network Topology & Interactive Dashboards**: Exports dark-mode HTML reports with live search, filtering, and standalone SVG topology diagrams.
+
+---
+
+## Feature Comparison: Network Scanner Suite vs Nmap
+
+| Capability | Network Scanner Suite | Nmap (Default CLI) |
+| :--- | :---: | :---: |
+| **Subnet Auto-Detection (`--local`)** | ✅ Built-in Zero-Config | ❌ Requires manual CIDR |
+| **Layer 2 ARP Discovery** | ✅ Rapid with OUI Lookup | ⚠️ Requires `-PR` flag |
+| **UDP Service Probing** | ✅ Protocol Payloads (DNS, NTP, SNMP, SSDP) | ⚠️ Slow without NSE tuning |
+| **Smart Device Classification** | ✅ Automatic (Router, NAS, IoT, Printer, PC) | ⚠️ Partial OS guess |
+| **SNMP System Enumeration** | ✅ Pure Python MIB-II (Uptime, Model) | ⚠️ Requires NSE scripts |
+| **SMB Signing & Protocol Audit** | ✅ Built-in Dialect & Signing Check | ⚠️ Requires NSE scripts |
+| **Offline CVE Auditing** | ✅ Built-in high-impact CVE engine | ⚠️ Vulners requires internet/API |
+| **Live Network Watch Mode** | ✅ Continuous alerts & audible bells | ❌ Not available natively |
+| **Persistent Asset Tagging (`TAG`)** | ✅ Built-in friendly labels & notes | ❌ External tool needed |
+| **Security Risk Scoring (0–100)** | ✅ Calculated score & remediation | ⚠️ Raw NSE findings only |
+| **Historical Diffs & Tracking** | ✅ FirstSeen, TimesSeen, change alerts | ❌ Third-party required (e.g. ndiff) |
+| **Interactive Standalone HTML Report** | ✅ Offline Glassmorphic Dashboard | ⚠️ Basic static XML/XSLT |
+| **SVG Network Topology Map** | ✅ Standalone & Embedded SVG | ❌ External GUI needed (Zenmap) |
+
+---
+
+## Architecture
+
+The project is structured into a clean, decoupled modular engine:
+
+```text
+scanner.py (CLI Entrypoint)
+  ├── network_scanner/
+  │    ├── discovery/   --> Layer 2 ARP Discovery & Live Watch Loop
+  │    ├── scanners/    --> Multi-threaded TCP, UDP, SNMP, SMB & ICMP Sweeps
+  │    ├── fingerprint/ --> TTL OS Estimation, Version Detection & Device Profiling
+  │    ├── security/    --> Risk Scoring Engine (0-100) & Offline CVE Engine
+  │    ├── inventory/   --> Persistent Asset Tagging & Historical Change Tracking
+  │    ├── reports/     --> Interactive HTML, SVG Topology, CSV & JSON Exporters
+  │    └── utils/       --> Subnet Auto-detection & OUI Vendor Resolvers
+```
 
 ---
 
 ## Key Features
 
-- 🔍 **ARP Discovery**: Rapid host discovery on local subnets with OUI vendor identification and reverse DNS hostname resolution.
-- 🎯 **Subnet Auto-Detection (`--local`)**: Zero-configuration scanning. Automatically identifies your active network interface, local IP, gateway, and CIDR block.
-- 📡 **Ping & Latency Sweep (`PING`)**: Multi-threaded ICMP sweep over CIDR subnets or single targets. Measures min/avg/max latency, jitter, packet loss, and round-trip time without requiring root privileges.
-- 💻 **OS Fingerprinting via TTL**: Estimates target operating systems (Linux/Android/macOS, Windows, or Cisco/Network devices) and network hop counts from packet Time-To-Live (TTL).
-- 🛡 **Multi-Threaded TCP Port Scanner (`TCP`)**: High-speed port scanner supporting safe TCP Connect scans (no root needed) and raw SYN half-open scans (`--syn`), complete with service detection and banner grabbing.
-- ⚠ **Security Risk Auditing**: Highlights unencrypted or dangerous exposed services (e.g., Telnet 23, FTP 21, HTTP 80, SMB 445, MySQL 3306, RDP 3389).
-- 👁 **Live Watch Mode (`--watch`)**: Continuous background network monitor that alerts with terminal bells and timestamps whenever a new or rogue device joins or leaves the network.
-- 🏷 **Device Inventory & Tagging (`TAG`)**: Label and annotate network assets (e.g., "Main Router", "Backup NAS", "Security Cam"). Tags persist across all scans.
-- 📊 **Executive HTML, CSV, & JSON Reports**: Generates standalone, dark-themed HTML executive audit reports (100% offline-ready, no CDN needed), CSV tables, and structured JSON.
+- 🔍 **ARP Discovery (`ARP`)**: High-speed Layer 2 discovery with IEEE OUI vendor resolution, private/randomized MAC detection, and reverse DNS.
+- 🎯 **Subnet Auto-Detection (`--local`)**: Zero-config scanning. Automatically binds to the active network interface and gateway.
+- 🛡 **Multi-Threaded TCP Scanner (`TCP`)**: High-concurrency socket connect scan (unprivileged) and raw SYN half-open scan (`--syn`, root required).
+- 📡 **UDP Service Scanner (`UDP`)**: Probes common UDP infrastructure services (DNS 53, DHCP 67, TFTP 69, NTP 123, SNMP 161, Syslog 514, SSDP 1900, mDNS 5353) with protocol-tailored payloads.
+- 🔬 **Service & Version Detection**: Extracts software versions from service banners (e.g., `OpenSSH 8.9p1`, `Apache/2.4.52`, `nginx/1.24`, `MySQL/MariaDB 13.0.2`, `Redis 7.2`).
+- 🛡 **Offline CVE Vulnerability Engine**: Matches detected banners against known CVEs with CVSS scores and remediations.
+- 🖥 **SNMP MIB-II Enumeration (`SNMP`)**: Extracts device descriptions, hostnames, and uptime without third-party dependencies.
+- 🗄 **SMB Protocol & Signing Audit (`SMB`)**: Audits SMBv1 risk, dialect negotiation, and SMB signing enforcement (relaying defense).
+- 🏷 **Smart Device Classification**: Categorizes discovered devices (*Router / Gateway*, *NAS / Storage*, *Printer / Scanner*, *Mobile*, *IoT*, *Workstation*, *Server*).
+- ⚠ **Automated Security Risk Scoring (0–100)**: Calculates host and network security scores with immediate remediation guidelines.
+- 🕒 **Historical Inventory & Diff Tracking**: Tracks `FirstSeen`, `LastSeen`, and `TimesSeen`. Alerts on changed hostnames or MAC addresses.
+- 🌐 **SVG Topology Visualizer**: Exports clean SVG network hierarchy diagrams representing routers, gateways, and grouped endpoints.
+- 👁 **Live Watch Mode (`--watch`)**: Continuous background monitor alerting on new devices connecting or hosts dropping offline.
+- 📊 **Executive Interactive HTML Reports**: Modern dark-themed dashboard with live client-side search, status filters, sorting, and collapsible drawers. 100% offline-ready.
 
 ---
 
@@ -22,7 +89,7 @@ A high-performance Python network discovery, security auditing, and inventory tr
 
 ### Prerequisites
 - Python 3.8+
-- Linux / macOS / Unix
+- Linux (Ubuntu, Kali, Parrot OS, Debian, Fedora) or macOS
 
 ```bash
 # Clone the repository
@@ -42,13 +109,13 @@ pip install -r requirements.txt
 ## Command-Line Usage
 
 ```bash
-usage: scanner.py [-h] {ARP,TCP,PING,TAG} ...
+usage: scanner.py [-h] {ARP,TCP,UDP,SNMP,SMB,PING,TAG} ...
 ```
 
 ### 1. ARP Discovery (`ARP`)
 
 > [!NOTE]
-> ARP packet transmission operates at Layer 2 and requires raw socket privileges. Run with `sudo`.
+> ARP operates at Layer 2 and requires raw socket privileges. Run with `sudo`.
 
 ```bash
 # Scan a specific subnet
@@ -60,39 +127,19 @@ sudo .venv/bin/python scanner.py ARP --local
 # Live Watch Mode: monitor network continuously every 15 seconds
 sudo .venv/bin/python scanner.py ARP --local --watch 15
 
-# Export discovery results to HTML, CSV, or JSON
-sudo .venv/bin/python scanner.py ARP --local --html network_report.html --csv network.csv
+# Export discovery results to interactive HTML and visual SVG topology
+sudo .venv/bin/python scanner.py ARP --local --html network_report.html --svg topology.svg
 ```
 
 ---
 
-### 2. Ping & Latency Sweep (`PING`)
-
-*No root privileges required.*
-
-```bash
-# Ping a single host and check round-trip stats & OS fingerprint
-python scanner.py PING 192.168.1.1 -c 4
-
-# Multi-threaded Ping sweep across an entire subnet
-python scanner.py PING 192.168.1.0/24 --threads 50
-
-# Auto-detect local network and run a fast ping sweep
-python scanner.py PING --local
-
-# Export sweep results to a styled HTML report
-python scanner.py PING --local --html ping_audit.html
-```
-
----
-
-### 3. TCP Port Scanner (`TCP`)
+### 2. TCP Port Scanner (`TCP`)
 
 ```bash
 # Scan default top 20 ports (non-root connect scan)
 python scanner.py TCP 192.168.1.1
 
-# Scan specific ports with service banner grabbing
+# Scan specific ports with service version detection and CVE auditing
 python scanner.py TCP 192.168.1.1 21 22 80 443 3306
 
 # Scan a range of ports (e.g. 1 to 1024)
@@ -101,13 +148,160 @@ python scanner.py TCP 192.168.1.1 --range 1 1024 --threads 100
 # High-speed raw SYN half-open scan (requires root)
 sudo .venv/bin/python scanner.py TCP 192.168.1.1 --top-ports 20 --syn
 
-# Export scan with security warnings to HTML
+# Export scan with security score and remediations to HTML
 python scanner.py TCP 192.168.1.1 --top-ports 20 --html port_scan.html
 ```
 
 ---
 
-### 4. Device Inventory & Tagging (`TAG`)
+### 3. UDP Port Scanner (`UDP`)
+
+*No root privileges required for socket probe mode.*
+
+```bash
+# Scan common UDP services (DNS, NTP, SNMP, SSDP, mDNS, etc.)
+python scanner.py UDP 192.168.1.1
+
+# Scan specific UDP ports
+python scanner.py UDP 192.168.1.1 53 123 161 5353
+
+# Scan top N common UDP ports
+python scanner.py UDP 192.168.1.1 --top-ports 10
+
+# Export UDP audit to interactive HTML
+python scanner.py UDP 192.168.1.1 --html udp_audit.html
+```
+
+---
+
+### 4. SNMP MIB-II Enumerator (`SNMP`)
+
+```bash
+# Enumerate system metrics (checks public, private, community)
+python scanner.py SNMP 192.168.1.1
+
+# Specify a custom community string and export HTML report
+python scanner.py SNMP 192.168.1.1 --community corporate_net --html snmp_report.html --theme cyberpunk
+```
+
+---
+
+### 5. SMB Protocol & Signing Audit (`SMB`)
+
+```bash
+# Audit SMB dialect support, SMBv1 risk, and message signing policy
+python scanner.py SMB 192.168.1.1
+
+# Export audit to HTML with Executive Light theme
+python scanner.py SMB 192.168.1.1 --html smb_audit.html --theme light
+```
+
+---
+
+### 6. DNS Enumeration & AXFR Zone Transfer (`DNS`)
+
+```bash
+# Query standard records (A, AAAA, MX, NS, TXT, SOA) and test for AXFR misconfigurations
+python scanner.py DNS example.com
+
+# Query using a specific DNS resolver
+python scanner.py DNS example.com --server 1.1.1.1 --html dns_audit.html
+```
+
+---
+
+### 7. Wireless / Wi-Fi Reconnaissance (`WIFI`)
+
+*Discovers nearby wireless access points, measures signal quality, and audits wireless encryption security (flags open Wi-Fi and WEP).*
+
+```bash
+# Scan nearby Wi-Fi networks (uses NetworkManager or iwlist)
+python scanner.py WIFI
+
+# Specify wireless interface and export results
+python scanner.py WIFI -i wlp2s0 --json wifi_scan.json --csv wifi_scan.csv
+```
+
+---
+
+### 8. IP Geolocation & WAN Intelligence (`GEO`)
+
+*Retrieves public IP geolocation, coordinates, ISP, and Autonomous System (ASN) details.*
+
+```bash
+# Geolocation lookup for a public host or WAN address
+python scanner.py GEO 8.8.8.8
+
+# Export intelligence to JSON
+python scanner.py GEO 1.1.1.1 --json geo_intel.json
+```
+
+---
+
+### 9. Live Packet Sniffing & PCAP Capture (`SNIFF`)
+
+*Captures and parses live network protocols (ARP, DHCP, DNS, ICMP) with optional Wireshark PCAP output.*
+
+```bash
+# Live packet inspection on the default interface
+sudo .venv/bin/python scanner.py SNIFF
+
+# Capture 50 packets with a custom BPF filter and save to PCAP
+sudo .venv/bin/python scanner.py SNIFF -i eth0 -c 50 -f "port 53 or arp" -w capture.pcap
+```
+
+---
+
+### 10. Web Dashboard & REST API Daemon (`SERVE`)
+
+*Starts an embedded, zero-dependency Python web server hosting an interactive dashboard and real-time REST API.*
+
+```bash
+# Start the web dashboard and REST API on port 8080
+python scanner.py SERVE --host 127.0.0.1 --port 8080
+```
+
+Available REST API endpoints:
+- `GET /` — Interactive Web Dashboard
+- `GET /api/inventory` — Current device history inventory
+- `GET /api/tags` — Configured device friendly tags and notes
+- `GET /api/subnet` — Auto-detected local subnet and interface
+- `GET /api/scan/wifi` — Trigger real-time wireless AP discovery
+- `GET /api/scan/tcp?target=IP&ports=22,80,443` — Run on-demand port scan
+
+---
+
+### 11. Configuration Management (`CONFIG`)
+
+```bash
+# View current preferences
+python scanner.py CONFIG
+
+# Update default scanning threads or HTML theme
+python scanner.py CONFIG --set threads 75
+python scanner.py CONFIG --set html_theme light
+```
+
+---
+
+### 12. Ping & Latency Sweep (`PING`)
+
+*No root privileges required.*
+
+```bash
+# Ping a single host and check round-trip stats, device role & OS fingerprint
+python scanner.py PING 192.168.1.1 -c 4
+
+# Multi-threaded Ping sweep across an entire subnet
+python scanner.py PING 192.168.1.0/24 --threads 50
+
+# Auto-detect local network and run a fast ping sweep with SVG topology
+python scanner.py PING --local --html ping_audit.html --svg ping_topology.svg
+```
+
+---
+
+### 13. Device Inventory & Tagging (`TAG`)
 
 Manage friendly aliases and notes for known devices:
 
@@ -125,23 +319,57 @@ python scanner.py TAG --delete 192.168.1.1
 
 ---
 
+## Docker Deployment
+
+You can run **Network Scanner Suite** without installing local Python dependencies using Docker:
+
+```bash
+# Build the Docker image
+docker build -t network-scanner .
+
+# Run ARP discovery using host networking
+docker run --rm --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN network-scanner ARP --local
+
+# Run a TCP security audit
+docker run --rm --net=host network-scanner TCP 192.168.1.1 --top-ports 20
+```
+
+---
+
+## Automated Testing
+
+The suite includes a comprehensive unit test suite:
+
+```bash
+# Run all unit tests
+.venv/bin/python -m unittest discover tests
+```
+
+---
+
+## Responsible Use
+
+> [!CAUTION]
+> This tool is intended solely for authorized network inventory, security auditing, and educational purposes on systems and networks you own or have explicit written permission to test. Unauthorized port scanning or reconnaissance may violate institutional policies or local computer crime laws.
+
+---
+
+## Tested Operating Systems
+
+- **Ubuntu** (20.04, 22.04, 24.04 LTS)
+- **Kali Linux** (2023.x / 2024.x)
+- **Parrot Security OS**
+- **Debian** (11 Bullseye, 12 Bookworm)
+- **Fedora** (38, 39, 40)
+- **macOS** (Sonoma / Sequoia)
+
+---
+
 ## Git Fork & Branch Workflow
 
-This repository is configured with a two-branch workflow to easily sync with the original upstream project:
-
+This repository is configured with a two-branch workflow:
 - **`upstream-clean`**: Tracks the original creator's repository (`zeyu2001/network-scanner`). Keep this branch untouched.
-- **`master`**: Contains all enhanced features, security auditing, and custom tooling.
-
-### Pulling updates from upstream:
-```bash
-# Fetch latest upstream changes
-git checkout upstream-clean
-git pull upstream master
-
-# Merge upstream updates into your enhanced master branch
-git checkout master
-git merge upstream-clean
-```
+- **`master`**: Contains the enhanced v2.0 suite, modular architecture, and security auditing engines.
 
 ---
 
