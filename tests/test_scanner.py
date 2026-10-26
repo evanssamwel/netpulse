@@ -312,7 +312,7 @@ class TestRemediation(unittest.TestCase):
 class TestWebServerAPI(unittest.TestCase):
     def test_dashboard_html_structure(self):
         from network_scanner.server.api import WEB_DASHBOARD_HTML
-        self.assertIn("CyberScan Studio", WEB_DASHBOARD_HTML)
+        self.assertIn("NetPulse Studio", WEB_DASHBOARD_HTML)
         self.assertIn("theme-obsidian", WEB_DASHBOARD_HTML)
         self.assertIn("theme-cyberpunk", WEB_DASHBOARD_HTML)
         self.assertIn("theme-light", WEB_DASHBOARD_HTML)

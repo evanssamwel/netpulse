@@ -1,4 +1,4 @@
-# Network Scanner Suite (v2.4.0)
+# NetPulse (v2.4.0)
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -7,17 +7,17 @@
 [![Code Style](https://img.shields.io/badge/Architecture-Modular%20v2.0-green.svg)](#architecture)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](#docker-deployment)
 [![Tests](https://img.shields.io/badge/Tests-34%20Passing-brightgreen.svg)](#automated-testing)
-[![Web App](https://img.shields.io/badge/GUI-CyberScan%20Studio-0ea5e9.svg)](#10-cyberscan-studio-web-app-gui--rest-api-serve)
+[![Web App](https://img.shields.io/badge/GUI-NetPulse%20Studio-0ea5e9.svg)](#10-netpulse-studio-web-app-gui--rest-api-serve)
 
-A high-performance Python network discovery, security auditing, and asset inventory toolkit designed for system administrators, penetration testers, and home lab enthusiasts.
+A high-performance Python network discovery, security auditing, and asset intelligence suite with an embedded graphical Web Studio designed for system administrators, penetration testers, and home lab enthusiasts.
 
-The project combines Layer 2/3/4 discovery, service and version enumeration, smart device classification, security posture risk scoring (0–100), offline CVE vulnerability auditing, SNMP/SMB reconnaissance, network diff change detection, and standalone interactive executive reporting into a single modular toolkit.
+The project combines Layer 2/3/4 discovery, service and version enumeration, smart device classification, security posture risk scoring (0–100), offline CVE vulnerability auditing, SNMP/SMB reconnaissance, network diff change detection, standalone interactive executive reporting, and an interactive point-and-click Web GUI into a single modular toolkit.
 
 ---
 
-## Why Network Scanner Suite?
+## Why NetPulse?
 
-Most command-line scanners either produce raw terminal text that is difficult to parse or require complex external scanning engines and database servers. **Network Scanner Suite** fills the gap:
+Most command-line scanners either produce raw terminal text that is difficult to parse or require complex external scanning engines and database servers. **NetPulse** fills the gap:
 
 1. **Zero Configuration (`--local`)**: Automatically detects default interface, gateway, and CIDR subnet.
 2. **Actionable Risk Scoring (0–100)**: Translates exposed ports into a quantifiable security score with prioritized remediation advice.
@@ -29,9 +29,9 @@ Most command-line scanners either produce raw terminal text that is difficult to
 
 ---
 
-## Feature Comparison: Network Scanner Suite vs Nmap
+## Feature Comparison: NetPulse vs Nmap
 
-| Capability | Network Scanner Suite | Nmap (Default CLI) |
+| Capability | NetPulse | Nmap (Default CLI) |
 | :--- | :---: | :---: |
 | **Subnet Auto-Detection (`--local`)** | ✅ Built-in Zero-Config | ❌ Requires manual CIDR |
 | **Layer 2 ARP Discovery** | ✅ Rapid with OUI Lookup | ⚠️ Requires `-PR` flag |
@@ -253,12 +253,12 @@ sudo .venv/bin/python scanner.py SNIFF -i eth0 -c 50 -f "port 53 or arp" -w capt
 
 ---
 
-### 10. CyberScan Studio Web App GUI & REST API (`SERVE`)
+### 10. NetPulse Studio Web App GUI & REST API (`SERVE`)
 
 *Instead of typing terminal commands, run scans through a sleek, point-and-click graphical Web App in your browser.*
 
 ```bash
-# Start the CyberScan Studio Web GUI on port 8080
+# Start the NetPulse Studio Web GUI on port 8080
 python scanner.py SERVE --host 127.0.0.1 --port 8080
 ```
 
@@ -274,7 +274,7 @@ Once running, navigate to **`http://127.0.0.1:8080/`** to access the complete gr
 - 🌙 **Multi-Theme Switcher**: Instant switching between **Dark Obsidian**, **Cyberpunk Neon**, and **Executive Light** themes.
 
 Full REST API endpoints:
-- `GET /` — CyberScan Studio Interactive Web Application (GUI)
+- `GET /` — NetPulse Studio Interactive Web Application (GUI)
 - `GET /api/inventory` — Discovered host assets and lifecycle history
 - `GET /api/tags` — Configured device friendly tags and notes
 - `GET /api/subnet` — Auto-detected local CIDR subnet and gateway
@@ -343,17 +343,17 @@ python scanner.py TAG --delete 192.168.1.1
 
 ## Docker Deployment
 
-You can run **Network Scanner Suite** without installing local Python dependencies using Docker:
+You can run **NetPulse** without installing local Python dependencies using Docker:
 
 ```bash
 # Build the Docker image
-docker build -t network-scanner .
+docker build -t netpulse .
 
 # Run ARP discovery using host networking
-docker run --rm --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN network-scanner ARP --local
+docker run --rm --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN netpulse ARP --local
 
 # Run a TCP security audit
-docker run --rm --net=host network-scanner TCP 192.168.1.1 --top-ports 20
+docker run --rm --net=host netpulse TCP 192.168.1.1 --top-ports 20
 ```
 
 ---

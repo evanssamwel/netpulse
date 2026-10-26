@@ -1,15 +1,16 @@
 """
-Configuration Manager for Network Scanner Suite.
+Configuration Manager for NetPulse Suite.
 Loads and persists user preferences (threads, timeouts, webhooks, default exports)
-from scanner_config.json or ~/.config/network-scanner/config.json.
+from scanner_config.json, ~/.config/netpulse/config.json, or ~/.config/network-scanner/config.json.
 """
 
 import json
 from pathlib import Path
 
 LOCAL_CONFIG_FILE = Path("scanner_config.json")
-GLOBAL_CONFIG_DIR = Path.home() / ".config" / "network-scanner"
+GLOBAL_CONFIG_DIR = Path.home() / ".config" / "netpulse"
 GLOBAL_CONFIG_FILE = GLOBAL_CONFIG_DIR / "config.json"
+LEGACY_CONFIG_FILE = Path.home() / ".config" / "network-scanner" / "config.json"
 
 DEFAULT_CONFIG = {
     "threads": 50,
@@ -43,6 +44,15 @@ def load_config():
     if GLOBAL_CONFIG_FILE.exists():
         try:
             with open(GLOBAL_CONFIG_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                config.update(data)
+                return config
+        except Exception:
+            pass
+
+    if LEGACY_CONFIG_FILE.exists():
+        try:
+            with open(LEGACY_CONFIG_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 config.update(data)
                 return config
