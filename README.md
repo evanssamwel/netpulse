@@ -9,6 +9,8 @@
 [![Tests](https://img.shields.io/badge/Tests-34%20Passing-brightgreen.svg)](#automated-testing)
 [![Web App](https://img.shields.io/badge/GUI-NetPulse%20Studio-0ea5e9.svg)](#10-netpulse-studio-web-app-gui--rest-api-serve)
 
+> 📖 **Need a quick cheat sheet for running commands?** See the [QUICKSTART.md](QUICKSTART.md) guide.
+
 A high-performance Python network discovery, security auditing, and asset intelligence suite with an embedded graphical Web Studio designed for system administrators, penetration testers, and home lab enthusiasts.
 
 The project combines Layer 2/3/4 discovery, service and version enumeration, smart device classification, security posture risk scoring (0–100), offline CVE vulnerability auditing, SNMP/SMB reconnaissance, network diff change detection, standalone interactive executive reporting, and an interactive point-and-click Web GUI into a single modular toolkit.
